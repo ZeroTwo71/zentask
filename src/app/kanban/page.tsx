@@ -15,7 +15,18 @@ export default function KanbanPage() {
         <KanbanBoard />
       </main>
       <footer className="mt-4 text-center text-xs text-muted-foreground">
-        <p>ZenTask - Built with Next.js, Tailwind CSS and shadcn/ui</p>
+        <p>
+          © {new Date().getFullYear()}{" "}
+          <a
+            href="https://github.com/ZeroTwo71"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ZeroTwo71
+          </a>
+          . All rights reserved.
+        </p>
+        <p>Built with Next.js, Tailwind, Shadcn and Vercel.</p>
       </footer>
     </div>
   );
