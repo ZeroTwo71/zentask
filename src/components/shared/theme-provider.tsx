@@ -3,8 +3,6 @@
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 
-type ProviderValue = ReturnType<typeof useTheme>;
-
 // Use a simpler approach to define properties without direct type dependencies
 export interface ThemeProviderProps extends React.PropsWithChildren {
   /** DOM attribute to apply theme with (data-theme, class, etc.) */
@@ -24,7 +22,7 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   return (
-    // @ts-ignore - Ignore type checking for the NextThemesProvider props
+    // @ts-expect-error - Ignore type checking for the NextThemesProvider props
     <NextThemesProvider {...props}>{children}</NextThemesProvider>
   );
 }

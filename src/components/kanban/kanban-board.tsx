@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -10,14 +10,14 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import { SortableContext } from "@dnd-kit/sortable";
 
 import { useConfetti } from "@/hooks/use-confetti";
 import { useKanbanStore } from "@/store/kanban-store";
 import { KanbanColumn } from "@/components/kanban/kanban-column";
 import { NewTaskForm } from "@/components/kanban/new-task-form";
 import { TaskEditDialog } from "@/components/kanban/task-edit-dialog";
-import { ColumnId, Task } from "@/lib/types/kanban";
+import { Task, TaskPriority } from "@/lib/types/kanban";
 
 export function KanbanBoard() {
   // Get kanban state and actions from store
@@ -40,7 +40,7 @@ export function KanbanBoard() {
   const { triggerConfetti, Confetti } = useConfetti();
 
   // Track active task during drag
-  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+  const [, setActiveTaskId] = useState<string | null>(null);
 
   // Configure DnD sensors
   const sensors = useSensors(

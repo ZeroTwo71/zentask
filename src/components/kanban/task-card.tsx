@@ -17,7 +17,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Task, TaskPriority } from "@/lib/types/kanban";
 import { PRIORITY_LABELS } from "./task-edit-dialog";

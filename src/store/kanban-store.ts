@@ -59,7 +59,7 @@ interface KanbanStore extends BoardState {
 // Create the Kanban store with Zustand
 export const useKanbanStore = create<KanbanStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       ...createInitialState(),
 
       // Add a new task to the "To Do" column by default
@@ -128,7 +128,7 @@ export const useKanbanStore = create<KanbanStore>()(
       deleteTask: (taskId: string) => {
         set((state) => {
           // Create a new tasks object without the deleted task
-          const { [taskId]: deletedTask, ...remainingTasks } = state.tasks;
+          const { [taskId]: _, ...remainingTasks } = state.tasks;
 
           // Find which column contains the task and remove it
           const updatedColumns = { ...state.columns };
