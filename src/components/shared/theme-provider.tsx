@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 // Use a simpler approach to define properties without direct type dependencies
 export interface ThemeProviderProps extends React.PropsWithChildren {

@@ -17,7 +17,7 @@ import { useKanbanStore } from "@/store/kanban-store";
 import { KanbanColumn } from "@/components/kanban/kanban-column";
 import { NewTaskForm } from "@/components/kanban/new-task-form";
 import { TaskEditDialog } from "@/components/kanban/task-edit-dialog";
-import { Task, TaskPriority } from "@/lib/types/kanban";
+import { Task } from "@/lib/types/kanban";
 
 export function KanbanBoard() {
   // Get kanban state and actions from store

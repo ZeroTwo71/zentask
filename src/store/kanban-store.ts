@@ -128,7 +128,8 @@ export const useKanbanStore = create<KanbanStore>()(
       deleteTask: (taskId: string) => {
         set((state) => {
           // Create a new tasks object without the deleted task
-          const { [taskId]: _, ...remainingTasks } = state.tasks;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { [taskId]: removed, ...remainingTasks } = state.tasks;
 
           // Find which column contains the task and remove it
           const updatedColumns = { ...state.columns };
