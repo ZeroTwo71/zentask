@@ -9,7 +9,6 @@ export default function KanbanPage() {
       <AppHeader
         title="ZenTask"
         description="A minimalist Kanban board for your daily tasks"
-        version="1.0"
       />
       <main className="overflow-hidden">
         <KanbanBoard />
