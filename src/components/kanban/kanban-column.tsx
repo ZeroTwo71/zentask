@@ -33,7 +33,7 @@ export function KanbanColumn({ column, tasks, onDeleteTask, onEditTask }: Kanban
     <Card 
       className={`w-full md:flex-1 md:min-w-[280px] md:h-[calc(100vh-170px)] h-[350px] flex flex-col border ${
         isOver ? "ring-2 ring-primary ring-opacity-50" : ""
-      }`}
+      } touch-scrollable`}
     >
       <CardHeader className="p-2 pb-1">
         <div className="flex justify-between items-center">
@@ -44,7 +44,7 @@ export function KanbanColumn({ column, tasks, onDeleteTask, onEditTask }: Kanban
       <Separator />
       <CardContent 
         ref={setNodeRef} 
-        className="flex-1 overflow-y-auto p-2"
+        className="flex-1 overflow-y-auto p-2 touch-scrollable"
       >
         <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
           {tasks.length === 0 ? (

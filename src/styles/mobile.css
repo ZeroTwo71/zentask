@@ -9,6 +9,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     touch-action: pan-y;
+    cursor: grab;
   }
   
   /* Improve card touch handling - make them more tappable */
@@ -21,6 +22,26 @@
   .touch-scrollable {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
+    touch-action: pan-y;
+  }
+  
+  /* Add visual feedback on touch */
+  .kanban-draggable:active {
+    box-shadow: 0 0 0 2px var(--primary);
+    opacity: 0.9;
+    cursor: grabbing;
+  }
+  
+  /* Allow card content to be scrolled inside columns */
+  [role="button"] {
+    touch-action: pan-y;
+  }
+  
+  /* Improve mobile dragging experience */
+  .group:active {
+    cursor: grabbing;
+    transform: scale(1.01);
+    transition: transform 0.1s ease;
   }
 }
 
@@ -31,4 +52,10 @@
 
 .draggable-task:active {
   cursor: grabbing;
+}
+
+/* Ensure tasks stand out when being dragged */
+.sorting {
+  opacity: 0.8;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }

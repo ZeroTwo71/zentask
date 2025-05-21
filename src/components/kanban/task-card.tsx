@@ -52,30 +52,34 @@ export function TaskCard({ task, onDelete, onEdit }: TaskCardProps) {
     isDragging,
     over,
   } = useSortable({
-    // Detect drag operations to distinguish from clicks
-    animateLayoutChanges: () => {
-      setIsDragOperation(true);
-      return false;
-    },
     id: task.id,
     data: {
       type: "task",
       task,
     },
   });
+  
+  // Handle drag state changes without violating React hooks rules
+  useEffect(() => {
+    if (isDragging) {
+      setIsDragOperation(true);
+    }
+  }, [isDragging]);
 
   // Check if the task is being dropped in the Done column and animate accordingly
   useEffect(() => {
-    // If we detect the task is over the Done column and hasn't been animated yet
+    // Skip this effect when dragging to prevent constant updates
+    if (isDragging) return;
+    
+    // Only process this when 'over' actually changed and we're over the done column
+    // This prevents infinite update loops
     const isDoneColumn = over?.id === 'done';
-    if (isDoneColumn && !hasAnimated && !isDragging) {
-      // Pilih animasi secara acak (0-4) untuk membuat variasi
-      const randomVariant = Math.floor(Math.random() * 5);
-      setAnimationVariant(randomVariant);
-      // Mark as animated so we don't repeat
+    if (isDoneColumn && !hasAnimated) {
+      // Use a callback form of setState to avoid dependency issues
+      setAnimationVariant(() => Math.floor(Math.random() * 5));
       setHasAnimated(true);
     }
-  }, [over, hasAnimated, isDragging]);
+  }, [over?.id, hasAnimated, isDragging]); // Only depend on over.id, not the entire over object
 
   // Reset drag operation flag when it ends
   useEffect(() => {
@@ -90,6 +94,9 @@ export function TaskCard({ task, onDelete, onEdit }: TaskCardProps) {
   const handleTaskClick = (e: React.MouseEvent) => {
     // Don't handle click if we're in the middle of a drag operation
     if (isDragOperation || isDragging) return;
+    
+    // Prevent event bubbling
+    e.stopPropagation();
     
     // Check if we clicked on a button element or its children
     let target = e.target as HTMLElement;
@@ -116,7 +123,7 @@ export function TaskCard({ task, onDelete, onEdit }: TaskCardProps) {
       <Card
         ref={setNodeRef}
         style={style}
-        className={`mb-2 shadow-sm hover:shadow-md transition-shadow duration-200 group relative ${over?.id === 'done' && !isDragging ? 'task-done-animation' : ''} ${animationVariant !== null ? `task-done-animation-${animationVariant}` : ''} ${!isDragging ? 'cursor-pointer' : ''}`}
+        className={`mb-2 shadow-sm hover:shadow-md transition-shadow duration-200 group relative ${over?.id === 'done' && !isDragging ? 'task-done-animation' : ''} ${animationVariant !== null ? `task-done-animation-${animationVariant}` : ''} ${!isDragging ? 'cursor-pointer kanban-draggable card-container' : ''}`}
         onClick={handleTaskClick}
         {...attributes}
         {...listeners}

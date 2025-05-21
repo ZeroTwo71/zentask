@@ -51,10 +51,10 @@ export function KanbanBoard() {
       },
     }),
     useSensor(TouchSensor, {
-      // Customize touch sensor behavior for mobile
+      // Customize touch sensor behavior for mobile - reduced delay for more responsive drag
       activationConstraint: {
-        delay: 200, // Short delay for touch to distinguish from tap/click (in ms)
-        tolerance: 5, // Small movement tolerance to prevent accidental drags
+        delay: 150, // Short delay for touch to distinguish from tap/click (in ms)
+        tolerance: 8, // Slightly higher tolerance for better mobile interaction
       },
     })
   );
@@ -109,6 +109,9 @@ export function KanbanBoard() {
         sourceColumnId = columnId;
       }
     });
+    
+    // If source column not found, exit early to prevent errors
+    if (!sourceColumnId) return;
 
     // Determine if dragging over a task or a column
     const isOverATask = Object.values(tasks).some(
@@ -123,11 +126,17 @@ export function KanbanBoard() {
           overColumnId = columnId;
         }
       });
+      
+      // Exit if we couldn't find the column
+      if (!overColumnId) return;
 
       // Only proceed if dragging over a task in a different column
       if (sourceColumnId !== overColumnId) {
         // Find index of over task in its column
         const overTaskIndex = columns[overColumnId].taskIds.indexOf(overId);
+        
+        // Exit if task position is invalid
+        if (overTaskIndex === -1) return;
         
         // Move the task to the new column at the appropriate position
         const { isFirstTimeInDone } = moveTask(
@@ -147,6 +156,9 @@ export function KanbanBoard() {
       const isOverAColumn = Object.keys(columns).includes(overId);
       
       if (isOverAColumn && sourceColumnId !== overId) {
+        // Ensure the column exists before trying to access its taskIds
+        if (!columns[overId]) return;
+        
         // Move task to end of the destination column
         const { isFirstTimeInDone } = moveTask(
           activeId,
@@ -183,6 +195,9 @@ export function KanbanBoard() {
         sourceColumnId = columnId;
       }
     });
+    
+    // If source column not found, exit early to prevent errors
+    if (!sourceColumnId || !columns[sourceColumnId]) return;
 
     // Determine if we're reordering within a column
     const isTaskInSameColumn = columns[sourceColumnId].taskIds.includes(overId);
@@ -193,8 +208,8 @@ export function KanbanBoard() {
       const startIndex = sourceTaskIds.indexOf(activeId);
       const endIndex = sourceTaskIds.indexOf(overId);
       
-      // Only reorder if positions changed
-      if (startIndex !== endIndex) {
+      // Only reorder if positions are valid and changed
+      if (startIndex !== -1 && endIndex !== -1 && startIndex !== endIndex) {
         reorderColumn(sourceColumnId, startIndex, endIndex);
       }
     }
@@ -211,6 +226,7 @@ export function KanbanBoard() {
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
+        // Better mobile handling without TypeScript errors
       >
         {/* Columns container */}
         <div className="flex flex-col md:flex-row gap-4 md:gap-2 pb-2 max-w-full overflow-auto touch-pan-y">
