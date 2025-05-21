@@ -7,6 +7,7 @@ import {
   DragOverEvent,
   DragStartEvent,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -42,11 +43,18 @@ export function KanbanBoard() {
   // Track active task during drag
   const [, setActiveTaskId] = useState<string | null>(null);
 
-  // Configure DnD sensors
+  // Configure DnD sensors for both mouse and touch interactions
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Minimum distance before drag starts
+        distance: 8, // Minimum distance before drag starts on desktop
+      },
+    }),
+    useSensor(TouchSensor, {
+      // Customize touch sensor behavior for mobile
+      activationConstraint: {
+        delay: 200, // Short delay for touch to distinguish from tap/click (in ms)
+        tolerance: 5, // Small movement tolerance to prevent accidental drags
       },
     })
   );
@@ -205,7 +213,7 @@ export function KanbanBoard() {
         onDragEnd={handleDragEnd}
       >
         {/* Columns container */}
-        <div className="flex flex-col md:flex-row gap-4 md:gap-2 pb-2 max-w-full overflow-auto">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-2 pb-2 max-w-full overflow-auto touch-pan-y">
           <SortableContext items={columnOrder}>
             {columnOrder.map((columnId) => {
               const column = columns[columnId];

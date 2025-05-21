@@ -1,0 +1,34 @@
+/* Mobile touch interaction enhancements */
+
+/* Improve touch targets for mobile - make items easier to tap */
+@media (max-width: 768px) {
+  /* Prevent unwanted text selection during drag operations */
+  .kanban-draggable {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    touch-action: pan-y;
+  }
+  
+  /* Improve card touch handling - make them more tappable */
+  .card-container {
+    -webkit-tap-highlight-color: transparent;
+    min-height: 44px; /* Minimum touch target size */
+  }
+  
+  /* Ensure touch scrolling works properly */
+  .touch-scrollable {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* Styling to indicate tasks can be dragged */
+.draggable-task {
+  cursor: grab;
+}
+
+.draggable-task:active {
+  cursor: grabbing;
+}

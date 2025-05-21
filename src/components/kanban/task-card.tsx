@@ -35,6 +35,8 @@ interface TaskCardProps {
 }
 
 export function TaskCard({ task, onDelete, onEdit }: TaskCardProps) {
+  // Track if we're in a drag operation to prevent click handling during drag
+  const [isDragOperation, setIsDragOperation] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
   // State untuk menyimpan nomor animasi yang akan digunakan (0-4)
@@ -50,6 +52,11 @@ export function TaskCard({ task, onDelete, onEdit }: TaskCardProps) {
     isDragging,
     over,
   } = useSortable({
+    // Detect drag operations to distinguish from clicks
+    animateLayoutChanges: () => {
+      setIsDragOperation(true);
+      return false;
+    },
     id: task.id,
     data: {
       type: "task",
@@ -70,6 +77,33 @@ export function TaskCard({ task, onDelete, onEdit }: TaskCardProps) {
     }
   }, [over, hasAnimated, isDragging]);
 
+  // Reset drag operation flag when it ends
+  useEffect(() => {
+    if (!isDragging && isDragOperation) {
+      // Small delay to avoid immediate click handling after drag
+      const timer = setTimeout(() => setIsDragOperation(false), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isDragging, isDragOperation]);
+
+  // Handle task card click for editing, especially useful on mobile
+  const handleTaskClick = (e: React.MouseEvent) => {
+    // Don't handle click if we're in the middle of a drag operation
+    if (isDragOperation || isDragging) return;
+    
+    // Check if we clicked on a button element or its children
+    let target = e.target as HTMLElement;
+    while (target && target !== e.currentTarget) {
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        return; // Exit if clicked on a button (edit or delete icons)
+      }
+      target = target.parentElement!;
+    }
+    
+    // If we didn't click on a button, trigger edit
+    onEdit(task);
+  };
+
   // Apply styles for dragging
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -82,7 +116,8 @@ export function TaskCard({ task, onDelete, onEdit }: TaskCardProps) {
       <Card
         ref={setNodeRef}
         style={style}
-        className={`mb-2 shadow-sm hover:shadow-md transition-shadow duration-200 group relative ${over?.id === 'done' && !isDragging ? 'task-done-animation' : ''} ${animationVariant !== null ? `task-done-animation-${animationVariant}` : ''}`}
+        className={`mb-2 shadow-sm hover:shadow-md transition-shadow duration-200 group relative ${over?.id === 'done' && !isDragging ? 'task-done-animation' : ''} ${animationVariant !== null ? `task-done-animation-${animationVariant}` : ''} ${!isDragging ? 'cursor-pointer' : ''}`}
+        onClick={handleTaskClick}
         {...attributes}
         {...listeners}
       >
