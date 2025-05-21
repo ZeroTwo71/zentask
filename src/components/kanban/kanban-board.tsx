@@ -205,7 +205,7 @@ export function KanbanBoard() {
         onDragEnd={handleDragEnd}
       >
         {/* Columns container */}
-        <div className="flex gap-2 overflow-x-auto pb-2 max-w-full">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-2 pb-2 max-w-full overflow-auto">
           <SortableContext items={columnOrder}>
             {columnOrder.map((columnId) => {
               const column = columns[columnId];

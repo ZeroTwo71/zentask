@@ -31,7 +31,7 @@ export function KanbanColumn({ column, tasks, onDeleteTask, onEditTask }: Kanban
 
   return (
     <Card 
-      className={`flex-1 min-w-[280px] h-[calc(100vh-170px)] flex flex-col border ${
+      className={`w-full md:flex-1 md:min-w-[280px] md:h-[calc(100vh-170px)] h-[350px] flex flex-col border ${
         isOver ? "ring-2 ring-primary ring-opacity-50" : ""
       }`}
     >
